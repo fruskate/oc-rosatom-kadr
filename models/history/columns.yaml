@@ -1,0 +1,14 @@
+columns:
+    created_at:
+        label: 'ДАТА ПРИМЕНЕНИЯ'
+        type: date
+        format: d.m.Y
+    condition:
+        label: УСЛОВИЕ
+        type: text
+        relation: condition
+        valueFrom: name
+    amount:
+        label: КОЛИЧЕСТВО
+        type: number
+

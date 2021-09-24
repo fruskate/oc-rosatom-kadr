@@ -1,0 +1,10 @@
+name: Conditions
+form: $/frukt/kadr/models/condition/fields.yaml
+modelClass: Frukt\Kadr\Models\Condition
+defaultRedirect: frukt/kadr/conditions
+create:
+    redirect: 'frukt/kadr/conditions/update/:id'
+    redirectClose: frukt/kadr/conditions
+update:
+    redirect: frukt/kadr/conditions
+    redirectClose: frukt/kadr/conditions

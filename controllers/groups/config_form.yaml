@@ -1,0 +1,10 @@
+name: Groups
+form: $/frukt/kadr/models/group/fields.yaml
+modelClass: Frukt\Kadr\Models\Group
+defaultRedirect: frukt/kadr/groups
+create:
+    redirect: 'frukt/kadr/groups/update/:id'
+    redirectClose: frukt/kadr/groups
+update:
+    redirect: frukt/kadr/groups
+    redirectClose: frukt/kadr/groups

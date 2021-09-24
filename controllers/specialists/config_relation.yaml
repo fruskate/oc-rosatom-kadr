@@ -1,0 +1,8 @@
+histories:
+    label: ИСТОРИЯ УСЛОВИЙ
+    manage:
+        form: $/frukt/kadr/models/history/fields.yaml
+        list: $/frukt/kadr/models/history/columns.yaml
+    view:
+        list: $/frukt/kadr/models/history/columns.yaml
+        toolbarButtons: create|delete

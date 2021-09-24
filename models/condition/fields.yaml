@@ -1,0 +1,5 @@
+fields:
+    name:
+        label: 'НАЗВАНИЕ УСЛОВИЯ'
+        span: auto
+        type: text

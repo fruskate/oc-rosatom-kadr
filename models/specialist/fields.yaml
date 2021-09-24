@@ -1,0 +1,59 @@
+fields:
+    fio:
+        label: ФИО
+        span: auto
+        required: 1
+        type: text
+    borned_at:
+        label: 'ДАТА РОЖДЕНИЯ'
+        mode: date
+        span: auto
+        required: 1
+        type: datepicker
+    started_at:
+        label: 'НАЧАЛО РАБОТЫ'
+        mode: date
+        span: auto
+        required: 1
+        type: datepicker
+    salary:
+        label: ЗАРПЛАТА
+        span: auto
+        type: number
+    groups:
+        label: ГРУППЫ
+        nameFrom: name
+        span: full
+        type: relation
+    is_ended@update:
+        label: 'УВОЛЕН?'
+        span: full
+        type: switch
+    ended_at@update:
+        label: 'КОНЕЦ РАБОТЫ'
+        mode: date
+        span: auto
+        type: datepicker
+        trigger:
+            action: show
+            field: is_ended
+            condition: checked
+    reasdis@update:
+        label: 'ПРИЧИНА УВОЛЬНЕНИЯ'
+        nameFrom: name
+        span: auto
+        type: relation
+        emptyOption: '-- НЕ УКАЗАНО --'
+        trigger:
+            action: show
+            field: is_ended
+            condition: checked
+tabs:
+    fields:
+        relation_histories:
+            span: full
+            type: partial
+            path: relation_histories
+            tab: УСЛОВИЯ
+            context:
+                - update

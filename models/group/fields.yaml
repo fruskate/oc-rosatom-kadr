@@ -1,0 +1,20 @@
+fields:
+    name:
+        label: 'НАЗВАНИЕ ГРУППЫ'
+        span: auto
+        type: text
+    code:
+        label: КОД
+        span: auto
+        type: text
+        preset: name
+    parent:
+        label: 'РОДИТЕЛЬСКАЯ ГРУППА'
+        nameFrom: name
+        span: auto
+        type: relation
+        emptyOption: '-- БЕЗ РОДИТЕЛЬСКОЙ ГРУППЫ --'
+    color:
+        label: ЦВЕТ
+        span: auto
+        type: colorpicker

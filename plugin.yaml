@@ -1,0 +1,65 @@
+plugin:
+    name: 'frukt.kadr::lang.plugin.name'
+    description: 'frukt.kadr::lang.plugin.description'
+    author: Frukt
+    icon: oc-icon-users
+    homepage: ''
+permissions:
+    specialist:
+        tab: КАДР
+        label: 'УПРАВЛЕНИЕ СПЕЦИАЛИСТАМИ'
+    helpers:
+        tab: КАДР
+        label: 'УПРАВЛЕНИЕ СПРАВОЧНИКАМИ'
+    analitycs:
+        tab: КАДР
+        label: 'УПРАВЛЕНИЕ АНАЛИТИКОЙ'
+navigation:
+    main-menu-item:
+        label: Кадр
+        url: /
+        icon: icon-users
+        sideMenu:
+            side-menu-item:
+                label: Специалисты
+                url: frukt/kadr/specialists
+                icon: icon-user
+                permissions:
+                    - specialist
+            side-menu-item2:
+                label: Аналитика
+                url: frukt/kadr/analitycs
+                icon: icon-pie-chart
+                permissions:
+                    - analitycs
+    main-menu-item2:
+        label: Хелперы
+        url: /
+        icon: icon-life-ring
+        sideMenu:
+            side-menu-item:
+                label: 'Причины увольнений'
+                url: frukt/kadr/reasdises
+                icon: icon-slideshare
+                permissions:
+                    - helpers
+            side-menu-item2:
+                label: Группы
+                url: frukt/kadr/groups
+                icon: icon-sitemap
+                permissions:
+                    - helpers
+            side-menu-item3:
+                label: 'Условия работы'
+                url: frukt/kadr/conditions
+                icon: icon-sliders
+                permissions:
+                    - helpers
+            settings:
+                label: Настройки
+                url: system/settings/update/frukt/kadr/settings
+                icon: icon-gears
+            side-menu-item4:
+                label: 'Импорт датасета'
+                url: frukt/kadr/importdataset
+                icon: icon-download

@@ -1,0 +1,10 @@
+fields:
+    condition:
+        label: УСЛОВИЕ
+        type: relation
+        nameFrom: name
+    amount:
+        label: КОЛИЧЕСТВО
+        span: auto
+        default: '1'
+        type: number

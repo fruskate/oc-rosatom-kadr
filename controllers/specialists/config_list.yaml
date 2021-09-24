@@ -1,0 +1,12 @@
+list: $/frukt/kadr/models/specialist/columns.yaml
+modelClass: Frukt\Kadr\Models\Specialist
+title: Specialists
+noRecordsMessage: 'backend::lang.list.no_records'
+showSetup: true
+showCheckboxes: true
+recordsPerPage: 20
+toolbar:
+    buttons: list_toolbar
+    search:
+        prompt: 'backend::lang.list.search_prompt'
+recordUrl: 'frukt/kadr/specialists/update/:id'

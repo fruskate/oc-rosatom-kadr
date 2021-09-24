@@ -1,0 +1,5 @@
+fields:
+    name:
+        label: 'ПРИЧИНА УВОЛЬНЕНИЯ'
+        span: auto
+        type: text

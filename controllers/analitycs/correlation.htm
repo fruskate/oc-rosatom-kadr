@@ -1,0 +1,59 @@
+<?php Block::put('breadcrumb') ?>
+<ul>
+    <li><a href="<?= Backend::url('frukt/kadr/analitycs') ?>">Аналитика</a></li>
+    <li>Корреляция</li>
+</ul>
+<?php Block::endPut() ?>
+<h3>Корреляция</h3>
+<form id="formCorrelation" data-request="onMakeCorrelation" data-request-validate autocomplete="off">
+    <div class="scoreboard">
+        <div data-control="toolbar">
+            <div class="scoreboard-item">
+                <div class="datepicker-here" data-range="true" data-date-format="yyyy-mm-dd" data-multiple-dates-separator="|" id="dates"></div>
+                <div class="validate-error" data-validate-for="dates"></div>
+                <input id="setDate" type="hidden" name="dates" value="">
+            </div>
+            <div class="scoreboard-item">
+                <div class="field-checkboxlist-container">
+                    <p class="help-block before-field">Выберите причины для увольнений используемые в расчётах?</p>
+                    <?php $i = 1; foreach ($reasdises as $item) { ?>
+                        <div class="checkbox custom-checkbox" tabindex="0">
+                            <input id="checkbox-readis<?= $i ?>" name="reasdises[]" value="<?= $item->id ?>" type="checkbox" <?php if ($i == 1) { echo('checked="checked" aria-checked="true"'); } ?> />
+                            <label for="checkbox-readis<?= $i ?>" class="storm-icon-pseudo"> <?= $item->name ?> </label>
+                            <p class="help-block"><?= $item->comment ?></p>
+                        </div>
+                    <?php $i++;  } ?>
+                </div>
+            </div>
+            <div class="scoreboard-item">
+                <div class="field-checkboxlist-container">
+                    <p class="help-block before-field">Какие группы включить в расчёты?</p>
+                    <?php $i = 1; foreach ($groups as $item) { ?>
+                    <div class="checkbox custom-checkbox" tabindex="0">
+                        <input id="checkbox-group<?= $i ?>" name="groups[]" value="<?= $item->id ?>" type="checkbox" <?php if ($i == 1) { echo('checked="checked" aria-checked="true"'); } ?> />
+                        <label for="checkbox-group<?= $i ?>" class="storm-icon-pseudo"> <?= $item->name ?> </label>
+                        <p class="help-block"><?= $item->comment ?></p>
+                    </div>
+                    <?php $i++;  } ?>
+                </div>
+            </div>
+            <div class="scoreboard-item">
+                <div class="field-checkboxlist-container">
+                    <p class="help-block before-field">Какие условия должны участвовать в расчётах?</p>
+                    <?php $i = 1; foreach ($conditions as $item) { ?>
+                    <div class="checkbox custom-checkbox" tabindex="0">
+                        <input id="checkbox-condition<?= $i ?>" name="conditions[]" value="<?= $item->id ?>" type="checkbox" checked="checked" aria-checked="true" />
+                        <label for="checkbox-condition<?= $i ?>" class="storm-icon-pseudo"> <?= $item->name ?> </label>
+                        <p class="help-block"><?= $item->comment ?></p>
+                    </div>
+                    <?php $i++;  } ?>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="text-center">
+        <button id="generationButton" type="submit" class="btn btn-primary">Обработать данные</button>
+    </div>
+</form>
+<div class="m-t-lg" id="answer"></div>

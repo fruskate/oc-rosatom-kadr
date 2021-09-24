@@ -1,0 +1,10 @@
+name: Specialists
+form: $/frukt/kadr/models/specialist/fields.yaml
+modelClass: Frukt\Kadr\Models\Specialist
+defaultRedirect: frukt/kadr/specialists
+create:
+    redirect: 'frukt/kadr/specialists/update/:id'
+    redirectClose: frukt/kadr/specialists
+update:
+    redirect: frukt/kadr/specialists
+    redirectClose: frukt/kadr/specialists

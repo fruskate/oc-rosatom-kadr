@@ -1,0 +1,10 @@
+name: Reasdises
+form: $/frukt/kadr/models/reasdis/fields.yaml
+modelClass: Frukt\Kadr\Models\Reasdis
+defaultRedirect: frukt/kadr/reasdises
+create:
+    redirect: 'frukt/kadr/reasdises/update/:id'
+    redirectClose: frukt/kadr/reasdises
+update:
+    redirect: frukt/kadr/reasdises
+    redirectClose: frukt/kadr/reasdises

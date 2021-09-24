@@ -1,0 +1,11 @@
+columns:
+    name:
+        label: 'НАЗВАНИЕ ГРУППЫ'
+        type: text
+    code:
+        label: КОД
+        type: text
+    options:
+        label: ЗНАЧЕНИЙ
+        type: partial
+        path: count_options

@@ -1,0 +1,65 @@
+
+<script>
+    $(document).ready(function(){
+        $.request('onLoadPieAll', {
+            data: {},
+            success: function(data) {
+                console.log(data)
+                new Chart(document.getElementById("pieAll"), {
+                    type: 'doughnut',
+                    data: data.data,
+                    options: data.options,
+                });
+            },
+            error: function(xhr, ajaxOptions, thrownError){
+                console.log(thrownError);
+            }
+        });
+        $.request('onLoadProcentEndedNewbies', {
+            data: {},
+            success: function(data) {
+                console.log(data)
+                new Chart(document.getElementById("procentEndedNewbies"), {
+                    type: 'line',
+                    data: data.data,
+                    options: data.options,
+                });
+            },
+            error: function(xhr, ajaxOptions, thrownError){
+                console.log(thrownError);
+            }
+        });
+
+        $.request('onLoadGroupConters', {
+            data: {},
+            success: function(data) {
+                console.log(data)
+                new Chart(document.getElementById("groupCounters"), {
+                    type: 'bar',
+                    data: data.data,
+                    options: data.options,
+                });
+            },
+            error: function(xhr, ajaxOptions, thrownError){
+                console.log(thrownError);
+            }
+        });
+
+    });
+
+</script>
+
+<div class="scoreboard">
+    <div data-control="toolbar">
+        <div class="scoreboard-item">
+            <canvas id="pieAll" width="150" height="150"></canvas>
+        </div>
+        <div class="scoreboard-item">
+            <canvas id="groupCounters" width="350" height="150"></canvas>
+        </div>
+        <div class="scoreboard-item">
+            <canvas id="procentEndedNewbies" width="350" height="150"></canvas>
+        </div>
+    </div>
+</div>
+<?= $this->listRender() ?>

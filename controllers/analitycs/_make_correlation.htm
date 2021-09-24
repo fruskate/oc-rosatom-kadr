@@ -1,0 +1,49 @@
+<canvas id="fullCorrelation" width="500" height="500"></canvas>
+<script>
+    new Chart(document.getElementById("fullCorrelation"), {
+        type: 'radar',
+        data: {
+            labels: [
+                {% for item in conditions %}
+                    '{{ item.name }}'{% if not loop.last %},{% endif %}
+                {% endfor %}
+            ],
+            datasets: [{
+                label: 'Уволенные',
+                data: [
+                    {% for item in fuckers %}
+                        {{ item }}{% if not loop.last %},{% endif %}
+                    {% endfor %}
+                ],
+                fill: true,
+                backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                borderColor: 'rgb(255, 99, 132)',
+                pointBackgroundColor: 'rgb(255, 99, 132)',
+                pointBorderColor: '#fff',
+                pointHoverBackgroundColor: '#fff',
+                pointHoverBorderColor: 'rgb(255, 99, 132)'
+            }, {
+                label: 'Продолжающие работать',
+                data: [
+                    {% for item in workers %}
+                        {{ item }}{% if not loop.last %},{% endif %}
+                    {% endfor %}
+                ],
+                fill: true,
+                backgroundColor: 'rgba(54, 225, 52, 0.2)',
+                borderColor: 'rgb(54, 225, 52)',
+                pointBackgroundColor: 'rgb(54, 225, 52)',
+                pointBorderColor: '#fff',
+                pointHoverBackgroundColor: '#fff',
+                pointHoverBorderColor: 'rgb(54, 225, 52)'
+            }]
+        },
+        options: {
+            elements: {
+                line: {
+                    borderWidth: 3
+                }
+            }
+        },
+    });
+</script>

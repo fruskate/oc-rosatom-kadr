@@ -1,0 +1,25 @@
+fields:
+    section1:
+        label: 'Настройки виджетов в специалистах'
+        span: full
+        type: section
+    month_to_specialists_display:
+        label: 'КОЛИЧЕСТВО МЕСЯЦЕВ'
+        span: auto
+        default: 6
+        type: number
+        comment: 'В зависимости от данной настройки в модуле специалистов будет загружена аналитическая информация'
+    section2:
+        label: 'Настройки зарплат'
+        span: full
+        type: section
+    salary_plus_id:
+        label: 'УСЛОВИЕ ПОВЫШАЮЩЕЕ ЗАРПЛАТУ'
+        type: dropdown
+        span: auto
+        options: getListConditions
+    salary_minus_id:
+        label: 'УСЛОВИЕ ПОНИЖАЮЩЕЕ ЗАРПЛАТУ'
+        type: dropdown
+        span: auto
+        options: getListConditions

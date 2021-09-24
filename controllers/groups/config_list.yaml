@@ -1,0 +1,16 @@
+list: $/frukt/kadr/models/group/columns.yaml
+modelClass: Frukt\Kadr\Models\Group
+title: Groups
+noRecordsMessage: 'backend::lang.list.no_records'
+showSetup: true
+showCheckboxes: true
+recordsPerPage: 20
+toolbar:
+    buttons: list_toolbar
+    search:
+        prompt: 'backend::lang.list.search_prompt'
+recordUrl: 'frukt/kadr/groups/update/:id'
+structure:
+    showTree: true
+    showReorder: false
+    maxDepth: 2
