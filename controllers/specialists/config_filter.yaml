@@ -1,0 +1,10 @@
+scopes:
+    ended:
+        label: Показать уволенных
+        type: checkbox
+        default: 0
+        conditions: is_ended <> false
+    started_at:
+        label: Прием на работу осуществлён
+        type: daterange
+        conditions: started_at >= ':after' AND started_at <= ':before'
