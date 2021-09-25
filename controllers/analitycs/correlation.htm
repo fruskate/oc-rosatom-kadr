@@ -1,7 +1,7 @@
 <?php Block::put('breadcrumb') ?>
 <ul>
     <li><a href="<?= Backend::url('frukt/kadr/analitycs') ?>">Аналитика</a></li>
-    <li>Корреляция</li>
+    <li>Корреляция уволившихся по группам</li>
 </ul>
 <?php Block::endPut() ?>
 <h3>Корреляция</h3>
@@ -15,7 +15,7 @@
             </div>
             <div class="scoreboard-item">
                 <div class="field-checkboxlist-container">
-                    <p class="help-block before-field">Выберите причины для увольнений используемые в расчётах?</p>
+                    <p class="help-block before-field">Причины увольнений для расчёта?</p>
                     <?php $i = 1; foreach ($reasdises as $item) { ?>
                         <div class="checkbox custom-checkbox" tabindex="0">
                             <input id="checkbox-readis<?= $i ?>" name="reasdises[]" value="<?= $item->id ?>" type="checkbox" <?php if ($i == 1) { echo('checked="checked" aria-checked="true"'); } ?> />
@@ -49,9 +49,28 @@
                     <?php $i++;  } ?>
                 </div>
             </div>
+            <div class="scoreboard-item">
+                <div class="field-checkboxlist-container">
+                    <p class="help-block before-field">Дополнительные данные</p>
+                    <div class="checkbox custom-checkbox" tabindex="0">
+                        <input id="checkbox-salary" name="salary" value="1" type="checkbox" checked="checked" aria-checked="true" />
+                        <label for="checkbox-salary" class="storm-icon-pseudo"> Средняя зарплата </label>
+                        <p class="help-block">Учитывать среднюю зарплату уволившихся</p>
+                    </div>
+                    <div class="checkbox custom-checkbox" tabindex="0">
+                        <input id="checkbox-stazh" name="stazh" value="1" type="checkbox" checked="checked" aria-checked="true" />
+                        <label for="checkbox-stazh" class="storm-icon-pseudo"> Стаж </label>
+                        <p class="help-block">Выводить средний стаж уволившихся</p>
+                    </div>
+                    <div class="checkbox custom-checkbox" tabindex="0">
+                        <input id="checkbox-vozrast" name="vozrast" value="1" type="checkbox" checked="checked" aria-checked="true" />
+                        <label for="checkbox-vozrast" class="storm-icon-pseudo"> Возраст </label>
+                        <p class="help-block">Выводить средний возраст уволившихся</p>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-
     <div class="text-center">
         <button id="generationButton" type="submit" class="btn btn-primary">Обработать данные</button>
     </div>

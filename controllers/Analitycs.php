@@ -2,6 +2,7 @@
 
 use BackendMenu;
 use Backend\Classes\Controller;
+use Carbon\Carbon;
 use Frukt\Kadr\Models\Condition;
 use Frukt\Kadr\Models\Group;
 use Frukt\Kadr\Models\Reasdis;
@@ -42,11 +43,25 @@ class Analitycs extends Controller
 
     public function onMakeCorrelation()
     {
-        trace_log(post());
+        try {
+            list($started, $ended) = explode('|', post('dates'));
+
+            $started = Carbon::parse($started)->toDateTimeString();
+            $ended = Carbon::parse($ended)->toDateTimeString();
+        } catch (\Exception $exception) {
+            throw new \ValidationException(['dates' => 'Пожалуйста, выберите даты!']);
+        }
+
 
         $groups = post('groups');
 
         $conditions = Condition::whereIn('id', post('conditions'))->get();
+
+        $conditionsFinalList = array();
+
+        foreach ($conditions as $condition) {
+            $conditionsFinalList[] = ['name' => $condition->name];
+        }
 
         $groups = Group::whereIn('id', post('groups'))->get();
 
@@ -72,17 +87,42 @@ class Analitycs extends Controller
                         })
                         ->whereIn('reasdis_id', post('reasdises'))
                         ->where('is_ended', true)
+                        ->where('ended_at', '>=', $started)
+                        ->where('ended_at', '<=', $ended)
                         ->count();
+            }
+
+            if (post('salary')) {
+                if (post('salary')) {
+                    $conditionsFinalList['salary'] = ['name' => 'Средняя зарплата'];
+                }
+
+
+                $salary = Specialist::whereHas('groups', function ($query) use ($group) {
+                    $query->where('id', $group->id);
+                })
+                    ->whereIn('reasdis_id', post('reasdises'))
+                    ->where('is_ended', true)
+                    ->where('ended_at', '>=', $started)
+                    ->where('ended_at', '<=', $ended)
+                    ->sum('salary');
+                $charsCount = Specialist::whereHas('groups', function ($query) use ($group) {
+                    $query->where('id', $group->id);
+                })
+                    ->whereIn('reasdis_id', post('reasdises'))
+                    ->where('is_ended', true)
+                    ->where('ended_at', '>=', $started)
+                    ->where('ended_at', '<=', $ended)
+                    ->count();
+                $arrayOfGroups[$group->id]['count'][] = ($charsCount > 0)? round($salary / $charsCount): 0;
             }
         }
 
         trace_log($arrayOfGroups);
 
-
-
         return [
             '#answer' => \Twig::parse($this->makePartial('make_correlation'), [
-                'conditions' => $conditions,
+                'conditions' => $conditionsFinalList,
                 'groups'    => $arrayOfGroups
             ]),
         ];
