@@ -5,7 +5,8 @@ columns:
     code:
         label: КОД
         type: text
-    options:
-        label: ЗНАЧЕНИЙ
-        type: partial
-        path: count_options
+    specialists_count:
+        label: СПЕЦИАЛИСТОВ
+        type: number
+        relation: specialists
+        useRelationCount: true

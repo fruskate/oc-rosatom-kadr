@@ -30,6 +30,11 @@ class Plugin extends PluginBase
         ];
     }
 
+    public function register()
+    {
+        $this->registerConsoleCommand('dataset:entergroups', 'Frukt\Kadr\Console\EnterToGroups');
+    }
+
     public function boot()
     {
         /* $samples = [
