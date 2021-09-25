@@ -33,6 +33,7 @@ class Plugin extends PluginBase
     public function register()
     {
         $this->registerConsoleCommand('dataset:entergroups', 'Frukt\Kadr\Console\EnterToGroups');
+        $this->registerConsoleCommand('dataset:addconditions', 'Frukt\Kadr\Console\AddConditions');
     }
 
     public function boot()

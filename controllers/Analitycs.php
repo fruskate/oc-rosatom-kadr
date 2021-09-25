@@ -48,34 +48,42 @@ class Analitycs extends Controller
 
         $conditions = Condition::whereIn('id', post('conditions'))->get();
 
-        $arrayOfWorkers = array();
-        $arrayOfFuckers = array();
+        $groups = Group::whereIn('id', post('groups'))->get();
 
-        foreach ($conditions as $condition) {
-            $arrayOfWorkers[] = Specialist::whereHas('groups', function ($query) use ($groups) {
-                $query->whereIn('id', $groups);
-            })
-                ->whereHas('histories', function ($query) use ($condition) {
-                    $query->where('condition_id', $condition->id);
-                })
-                ->where('is_ended', false)
-                ->count();
-            $arrayOfFuckers[] = Specialist::whereHas('groups', function ($query) use ($groups) {
-                $query->whereIn('id', $groups);
-            })
-                ->whereHas('histories', function ($query) use ($condition) {
-                    $query->where('condition_id', $condition->id);
-                })
-                ->whereIn('reasdis_id', post('reasdises'))
-                ->where('is_ended', true)
-                ->count();
+        $arrayOfGroups = array();
+
+        foreach ($groups as $group) {
+                list($r, $g, $b) = sscanf($group->color, "#%02x%02x%02x");
+                $arrayOfGroups[$group->id] = [
+                    'name' => $group->name,
+                    'color' => [
+                        'r' => $r,
+                        'g' => $g,
+                        'b' => $b,
+                    ],
+                    'count' => array()
+                ];
+            foreach ($conditions as $condition) {
+                $arrayOfGroups[$group->id]['count'][] = Specialist::whereHas('groups', function ($query) use ($group) {
+                        $query->where('id', $group->id);
+                    })
+                        ->whereHas('histories', function ($query) use ($condition) {
+                            $query->where('condition_id', $condition->id);
+                        })
+                        ->whereIn('reasdis_id', post('reasdises'))
+                        ->where('is_ended', true)
+                        ->count();
+            }
         }
+
+        trace_log($arrayOfGroups);
+
+
 
         return [
             '#answer' => \Twig::parse($this->makePartial('make_correlation'), [
                 'conditions' => $conditions,
-                'workers'    => $arrayOfWorkers,
-                'fuckers'    => $arrayOfFuckers
+                'groups'    => $arrayOfGroups
             ]),
         ];
     }
