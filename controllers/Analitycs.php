@@ -100,7 +100,7 @@ class Analitycs extends Controller
                 $averageTitles[] = 'Средняя зарплата';
             }
             if (post('stazh')) {
-                $averageTitles[] = 'Стаж в днях';
+                $averageTitles[] = 'Стаж в годах';
             }
             if (post('vozrast')) {
                 $averageTitles[] = 'Возраст';
@@ -148,7 +148,7 @@ class Analitycs extends Controller
                         ->where('is_ended', true)
                         ->where('ended_at', '>=', $started)
                         ->where('ended_at', '<=', $ended)
-                        ->get()->sum('work_days');
+                        ->get()->sum('work_days') / 365;
 
                     $charsCount = Specialist::whereHas('groups', function ($query) use ($group) {
                         $query->where('id', $group->id);
