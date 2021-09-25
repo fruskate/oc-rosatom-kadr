@@ -41,14 +41,12 @@
             </div>
             <div class="scoreboard-item">
                 <div class="field-checkboxlist-container">
-                    <p class="help-block before-field">Какие условия должны участвовать в расчётах?</p>
-                    <?php $i = 1; foreach ($conditions as $item) { ?>
-                    <div class="checkbox custom-checkbox" tabindex="0">
-                        <input id="checkbox-condition<?= $i ?>" name="conditions[]" value="<?= $item->id ?>" type="checkbox" checked="checked" aria-checked="true" />
-                        <label for="checkbox-condition<?= $i ?>" class="storm-icon-pseudo"> <?= $item->name ?> </label>
-                        <p class="help-block"><?= $item->comment ?></p>
-                    </div>
-                    <?php $i++;  } ?>
+                    <p class="help-block before-field">Наложить дополнительное условие</p>
+                    <select class="form-control custom-select" name="condition_id">
+                        <?php $i = 1; foreach ($conditions as $item) { ?>
+                            <option value="<?= $item->id ?>"><?= $item->name ?></option>
+                        <?php $i++;  } ?>
+                    </select>
                 </div>
             </div>
             <div class="scoreboard-item">
@@ -64,17 +62,24 @@
                         <label for="checkbox-stazh" class="storm-icon-pseudo"> Стаж </label>
                         <p class="help-block">Выводить средний стаж уволившихся</p>
                     </div>
-                    <div class="checkbox custom-checkbox" tabindex="0">
-                        <input id="checkbox-vozrast" name="vozrast" value="1" type="checkbox" checked="checked" aria-checked="true" />
-                        <label for="checkbox-vozrast" class="storm-icon-pseudo"> Возраст </label>
-                        <p class="help-block">Выводить средний возраст уволившихся</p>
-                    </div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="text-center">
-        <button id="generationButton" type="submit" class="btn btn-primary">Обработать данные</button>
+    <div class="form-buttons">
+        <div class="loading-indicator-container">
+            <div class="text-center">
+                <button
+                    id="generationButton"
+                    type="submit"
+                    class="btn btn-primary"
+                    data-request="onMakeFluidity"
+                    data-load-indicator="Работаю, ждите...">
+                    Обработать данные
+                </button>
+            </div>
+        </div>
     </div>
+
 </form>
 <div class="m-t-lg" id="answer"></div>

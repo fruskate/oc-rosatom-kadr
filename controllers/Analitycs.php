@@ -226,7 +226,9 @@ class Analitycs extends Controller
         trace_log(post());
         $year = Carbon::parse(post('year').'-01-01')->startOfYear();
         $groups = Group::whereIn('id', post('groups'))->get();
+        $months = ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'];
         $dataset = array();
+        $dataset2 = array();
 
         foreach ($groups as $group) {
             list($r, $g, $b) = sscanf($group->color, "#%02x%02x%02x");
@@ -271,13 +273,79 @@ class Analitycs extends Controller
             ];
         }
 
-        $months = ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'];
+
+        $condition = Condition::find(post('condition_id'));
+        $totalWithConditionYear = 0;
+        $totalWithoutConditionYear = 0;
+        foreach ($groups as $group) {
+            $condition_id = post('condition_id');
+            list($r, $g, $b) = sscanf($group->color, "#%02x%02x%02x");
+            $counts1 = array();
+            $counts2 = array();
+            for($i = 0; $i <= 11; $i++) {
+                $from = $year->copy()->addMonths($i)->startOfMonth()->toDateTimeString();
+                $to = $year->copy()->addMonths($i)->endOfMonth()->toDateTimeString();
+
+                $dataWith = Specialist::whereHas('groups', function ($query) use ($group) {
+                    $query->where('id', $group->id);
+                })
+                    ->whereHas('histories', function ($query) use ($condition_id) {
+                        $query->where('condition_id', $condition_id);
+                    })
+                    ->where('started_at', '<=', $to)
+                    ->where('ended_at', '<=', $to)
+                    ->where('ended_at', '>=', $from)
+                    ->whereIn('reasdis_id', post('reasdises'))
+                    ->where('is_ended', true)
+                    ->count();
+
+                $dataWithOut = Specialist::whereHas('groups', function ($query) use ($group) {
+                    $query->where('id', $group->id);
+                })
+                    ->whereHas('histories', function ($query) use ($condition_id) {
+                        $query->where('condition_id', '<>', $condition_id);
+                    })
+                    ->where('started_at', '<=', $to)
+                    ->where('ended_at', '<=', $to)
+                    ->where('ended_at', '>=', $from)
+                    ->whereIn('reasdis_id', post('reasdises'))
+                    ->where('is_ended', true)
+                    ->count();
+
+                $counts1[] = $dataWith;
+                $totalWithConditionYear += $dataWith;
+                $counts2[] = $dataWithOut;
+                $totalWithoutConditionYear += $dataWithOut;
+            }
+            $dataset2[] = [
+                'name' => $group->name.' | включая '.$condition->name,
+                'color' => [
+                    'r' => $r,
+                    'g' => $g,
+                    'b' => $b,
+                ],
+                'count' => $counts1,
+            ];
+            $dataset2[] = [
+                'name' => $group->name.' | исключая '.$condition->name,
+                'color' => [
+                    'r' => $r,
+                    'g' => $g,
+                    'b' => $b,
+                ],
+                'count' => $counts2,
+            ];
+        }
 
         trace_log($dataset);
         return [
             '#answer' => \Twig::parse($this->makePartial('make_fluidity'), [
                 'months' => $months,
-                'dataset' => $dataset
+                'dataset' => $dataset,
+                'dataset2' => $dataset2,
+                'condition' => $condition,
+                'totalWithConditionYear' => $totalWithConditionYear,
+                'totalWithoutConditionYear' => $totalWithoutConditionYear,
             ]),
         ];
     }
