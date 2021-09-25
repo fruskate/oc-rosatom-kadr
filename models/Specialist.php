@@ -29,7 +29,8 @@ class Specialist extends Model
 
     protected $appends = ['work_days'];
 
-    protected $fillable = ['fio', 'borned_at', 'started_at', 'ended_at', 'is_ended', 'reasdis_id', 'salary'];
+    protected $fillable = ['fio', 'borned_at', 'started_at', 'ended_at', 'is_ended', 'reasdis_id', 'salary',
+        'childs', 'sex_id', 'position_id', 'family_id'];
 
     public $belongsTo = [
         'reasdis' => \Frukt\Kadr\Models\Reasdis::class,

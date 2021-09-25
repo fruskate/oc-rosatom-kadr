@@ -65,9 +65,13 @@ navigation:
                 icon: icon-download
             side-menu-item5:
                 label: Пол
-                url: /
+                url: frukt/kadr/sexs
                 icon: icon-users
             side-menu-item6:
                 label: Должности
                 url: frukt/kadr/positions
                 icon: icon-suitcase
+            side-menu-item7:
+                label: 'Семейное положение'
+                url: frukt/kadr/families
+                icon: icon-transgender-alt

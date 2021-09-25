@@ -1,0 +1,10 @@
+name: Families
+form: $/frukt/kadr/models/family/fields.yaml
+modelClass: Frukt\Kadr\Models\Family
+defaultRedirect: frukt/kadr/families
+create:
+    redirect: 'frukt/kadr/families/update/:id'
+    redirectClose: frukt/kadr/families
+update:
+    redirect: frukt/kadr/families
+    redirectClose: frukt/kadr/families
