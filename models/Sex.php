@@ -8,7 +8,7 @@ use Model;
 class Sex extends Model
 {
     use \October\Rain\Database\Traits\Validation;
-    
+
     /*
      * Disable timestamps by default.
      * Remove this line if timestamps are defined in the database table.
@@ -26,4 +26,6 @@ class Sex extends Model
      */
     public $rules = [
     ];
+
+    protected $fillable = ['name'];
 }
