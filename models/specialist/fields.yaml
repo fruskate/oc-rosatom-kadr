@@ -16,6 +16,24 @@ fields:
         span: auto
         required: 1
         type: datepicker
+    sex:
+        label: 'ПОЛ'
+        nameFrom: name
+        span: auto
+        type: relation
+        emptyOption: '-- НЕ УКАЗАНО --'
+    position:
+        label: 'ДОЛЖНОСТЬ'
+        nameFrom: name
+        span: auto
+        type: relation
+        emptyOption: '-- НЕ УКАЗАНО --'
+    family:
+        label: 'СЕМЕЙНОЕ ПОЛОЖЕНИЕ'
+        nameFrom: name
+        span: auto
+        type: relation
+        emptyOption: '-- НЕ УКАЗАНО --'
     salary:
         label: ЗАРПЛАТА
         span: auto

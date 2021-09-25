@@ -1,0 +1,4 @@
+columns:
+    name:
+        label: 'СЕМЕЙНОЕ ПОЛОЖЕНИЕ'
+        type: text

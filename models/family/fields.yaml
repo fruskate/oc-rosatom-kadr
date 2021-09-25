@@ -1,0 +1,5 @@
+fields:
+    name:
+        label: 'СЕМЕЙНОЕ ПОЛОЖЕНИЕ'
+        span: auto
+        type: text

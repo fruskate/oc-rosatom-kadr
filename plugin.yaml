@@ -63,3 +63,11 @@ navigation:
                 label: 'Импорт датасета'
                 url: frukt/kadr/importdataset
                 icon: icon-download
+            side-menu-item5:
+                label: Пол
+                url: /
+                icon: icon-users
+            side-menu-item6:
+                label: Должности
+                url: frukt/kadr/positions
+                icon: icon-suitcase

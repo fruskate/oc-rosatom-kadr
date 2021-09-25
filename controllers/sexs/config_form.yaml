@@ -1,0 +1,10 @@
+name: Sexs
+form: $/frukt/kadr/models/sex/fields.yaml
+modelClass: Frukt\Kadr\Models\Sex
+defaultRedirect: frukt/kadr/sexs
+create:
+    redirect: 'frukt/kadr/sexs/update/:id'
+    redirectClose: frukt/kadr/sexs
+update:
+    redirect: frukt/kadr/sexs
+    redirectClose: frukt/kadr/sexs

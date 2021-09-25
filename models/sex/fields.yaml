@@ -1,0 +1,5 @@
+fields:
+    name:
+        label: 'ПОЛ'
+        span: auto
+        type: text

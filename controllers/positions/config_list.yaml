@@ -1,0 +1,12 @@
+list: $/frukt/kadr/models/position/columns.yaml
+modelClass: Frukt\Kadr\Models\Position
+title: Positions
+noRecordsMessage: 'backend::lang.list.no_records'
+showSetup: true
+showCheckboxes: true
+recordsPerPage: 20
+toolbar:
+    buttons: list_toolbar
+    search:
+        prompt: 'backend::lang.list.search_prompt'
+recordUrl: 'frukt/kadr/positions/update/:id'

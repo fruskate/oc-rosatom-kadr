@@ -1,0 +1,10 @@
+name: Positions
+form: $/frukt/kadr/models/position/fields.yaml
+modelClass: Frukt\Kadr\Models\Position
+defaultRedirect: frukt/kadr/positions
+create:
+    redirect: 'frukt/kadr/positions/update/:id'
+    redirectClose: frukt/kadr/positions
+update:
+    redirect: frukt/kadr/positions
+    redirectClose: frukt/kadr/positions

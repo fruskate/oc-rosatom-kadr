@@ -32,7 +32,10 @@ class Specialist extends Model
     protected $fillable = ['fio', 'borned_at', 'started_at', 'ended_at', 'is_ended', 'reasdis_id', 'salary'];
 
     public $belongsTo = [
-        'reasdis' => \Frukt\Kadr\Models\Reasdis::class
+        'reasdis' => \Frukt\Kadr\Models\Reasdis::class,
+        'sex' => \Frukt\Kadr\Models\Sex::class,
+        'position' => \Frukt\Kadr\Models\Position::class,
+        'family' => \Frukt\Kadr\Models\Family::class
     ];
 
     public $belongsToMany = [
