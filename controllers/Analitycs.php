@@ -415,6 +415,84 @@ class Analitycs extends Controller
             }
         }
 
+        $showStazh = false;
+        $dataset4 = array();
+        $totalWorkersStazh = 0;
+        $totalFuckersStazh = 0;
+        if (post('stazh')) {
+            $showStazh = true;
+            foreach ($groups as $group) {
+                list($r, $g, $b) = sscanf($group->color, "#%02x%02x%02x");
+                $counts1 = array();
+                $counts2 = array();
+                for ($i = 0; $i <= 11; $i++) {
+                    $from = $year->copy()->addMonths($i)->startOfMonth()->toDateTimeString();
+                    $to = $year->copy()->addMonths($i)->endOfMonth()->toDateTimeString();
+
+                    $stazhWorkers = Specialist::whereHas('groups', function ($query) use ($group) {
+                        $query->where('id', $group->id);
+                    })
+                        ->where('started_at', '<=', $to)
+                        ->where('ended_at', '>', $to)
+                        ->orWhere('started_at', '<=', $to)
+                        ->whereNull('ended_at')
+                        ->get()->sum('work_days') / 365;
+
+                    $stazhWorkersCount = Specialist::whereHas('groups', function ($query) use ($group) {
+                        $query->where('id', $group->id);
+                    })
+                        ->where('started_at', '<=', $to)
+                        ->where('ended_at', '>', $to)
+                        ->orWhere('started_at', '<=', $to)
+                        ->whereNull('ended_at')
+                        ->count();
+
+                    $stazhFuckers = Specialist::whereHas('groups', function ($query) use ($group) {
+                        $query->where('id', $group->id);
+                    })
+                        ->where('started_at', '<=', $to)
+                        ->where('ended_at', '<=', $to)
+                        ->where('ended_at', '>=', $from)
+                        ->whereIn('reasdis_id', post('reasdises'))
+                        ->where('is_ended', true)
+                        ->get()->sum('work_days') / 365;
+
+                    $stazhFuckersCount = Specialist::whereHas('groups', function ($query) use ($group) {
+                        $query->where('id', $group->id);
+                    })
+                        ->where('started_at', '<=', $to)
+                        ->where('ended_at', '<=', $to)
+                        ->where('ended_at', '>=', $from)
+                        ->whereIn('reasdis_id', post('reasdises'))
+                        ->where('is_ended', true)
+                        ->count();
+
+                    $counts1[] = ($stazhWorkersCount > 0) ? round($stazhWorkers / $stazhWorkersCount) : 0;
+                    $totalWorkersStazh += ($stazhWorkersCount > 0) ? round($stazhWorkers / $stazhWorkersCount) : 0;
+                    $counts2[] = ($stazhFuckersCount > 0) ? round($stazhFuckers / $stazhFuckersCount) : 0;
+                    $totalFuckersStazh += ($stazhFuckersCount > 0) ? round($stazhFuckers / $stazhFuckersCount) : 0;
+                }
+                $dataset4[] = [
+                    'name'  => $group->name . ' - работающие ',
+                    'color' => [
+                        'r' => $r,
+                        'g' => $g,
+                        'b' => $b,
+                    ],
+                    'count' => $counts1,
+                ];
+                $dataset4[] = [
+                    'name'  => $group->name . ' - уволенные',
+                    'color' => [
+                        'r' => $r,
+                        'g' => $g,
+                        'b' => $b,
+                    ],
+                    'count' => $counts2,
+                ];
+            }
+        }
+
         return [
             '#answer' => \Twig::parse($this->makePartial('make_fluidity'), [
                 'months'                    => $months,
@@ -426,7 +504,11 @@ class Analitycs extends Controller
                 'showSalary'                => $showSalary,
                 'dataset3'                  => $dataset3,
                 'totalWorkersSalary'        => round($totalWorkersSalary / 12 / $groups->count()),
-                'totalFuckersSalary'        => round($totalFuckersSalary / 12 / $groups->count())
+                'totalFuckersSalary'        => round($totalFuckersSalary / 12 / $groups->count()),
+                'showStazh'                => $showStazh,
+                'dataset4'                  => $dataset4,
+                'totalWorkersStazh'        => round($totalWorkersStazh / 12 / $groups->count()),
+                'totalFuckersStazh'        => round($totalFuckersStazh / 12 / $groups->count())
             ]),
         ];
     }

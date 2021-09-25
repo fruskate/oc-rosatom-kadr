@@ -5,16 +5,26 @@
             <p class="{% if totalWithConditionYear < totalWithoutConditionYear %}positive{% else %}negative{% endif %}">{{ totalWithConditionYear }}</p>
             <p class="description">без условия: {{ totalWithoutConditionYear  }}</p>
         </div>
-        <div class="scoreboard-item title-value">
-            <h4>Уровень зарплаты работающих за год</h4>
-            <p class="{% if totalWorkersSalary > totalFuckersSalary %}positive{% else %}negative{% endif %}">{{ totalWorkersSalary }}</p>
-            <p class="description">уволенных: {{ totalFuckersSalary  }}</p>
-        </div>
+        {% if showSalary %}
+            <div class="scoreboard-item title-value">
+                <h4>Уровень зарплаты работающих за год</h4>
+                <p class="{% if totalWorkersSalary > totalFuckersSalary %}positive{% else %}negative{% endif %}">{{ totalWorkersSalary }}</p>
+                <p class="description">уволенных: {{ totalFuckersSalary  }}</p>
+            </div>
+        {% endif %}
+        {% if showStazh %}
+            <div class="scoreboard-item title-value">
+                <h4>Средний стаж работающих</h4>
+                <p class="{% if totalWorkersStazh > totalFuckersStazh %}positive{% else %}negative{% endif %}">{{ totalWorkersStazh }}</p>
+                <p class="description">уволенных: {{ totalFuckersStazh  }}</p>
+            </div>
+        {% endif %}
     </div>
 </div>
 <canvas id="fullFluidity" width="500" height="100"></canvas>
 <canvas id="fluidityWithCondition" width="500" height="100"></canvas>
 <canvas id="salary" width="500" height="100"></canvas>
+<canvas id="stazh" width="500" height="100"></canvas>
 <script>
     new Chart(document.getElementById("fullFluidity"), {
         type: 'bar',
@@ -82,7 +92,43 @@
         },
 
     });
-    new Chart(document.getElementById("salary"), {
+    {% if showSalary %}
+        new Chart(document.getElementById("salary"), {
+            type: 'bar',
+            data: {
+                labels: [
+
+                    {% for item in months %}'{{ item }}'{% if not loop.last %},{% endif %}{% endfor %}
+
+                ],
+                datasets: [
+                    {% for item in dataset3 %}
+                    {
+                        label: '{{ item.name }}',
+                        data: [{% for count in item.count %}{{ count }}{% if not loop.last %},{% endif %}{% endfor %}],
+                        borderColor: 'rgb({{ item.color.r }}, {{ item.color.g }}, {{ item.color.b }})',
+                        backgroundColor: 'rgba({{ item.color.r }}, {{ item.color.g }}, {{ item.color.b }}, 0.5)',
+                    }{% if not loop.last %},{% endif %}
+                    {% endfor %}
+                ]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    title: {
+                        display: true,
+                        text: 'Средние значения зарплаты уволившихся и работающих по группам'
+                    }
+                }
+            },
+
+        });
+    {% endif %}
+    {% if showStazh %}
+    new Chart(document.getElementById("stazh"), {
         type: 'bar',
         data: {
             labels: [
@@ -91,7 +137,7 @@
 
             ],
             datasets: [
-                {% for item in dataset3 %}
+                {% for item in dataset4 %}
                 {
                     label: '{{ item.name }}',
                     data: [{% for count in item.count %}{{ count }}{% if not loop.last %},{% endif %}{% endfor %}],
@@ -109,10 +155,11 @@
                 },
                 title: {
                     display: true,
-                    text: 'Средние значения зарплаты уволившихся и работающих по группам'
+                    text: 'Средние значения стажа уволившихся и работающих по группам'
                 }
             }
         },
 
     });
+    {% endif %}
 </script>
