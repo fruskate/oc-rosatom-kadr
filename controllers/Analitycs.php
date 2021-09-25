@@ -75,28 +75,28 @@ class Analitycs extends Controller
         $arrayOfGroups = array();
 
         foreach ($groups as $group) {
-                list($r, $g, $b) = sscanf($group->color, "#%02x%02x%02x");
-                $arrayOfGroups[$group->id] = [
-                    'name' => $group->name,
-                    'color' => [
-                        'r' => $r,
-                        'g' => $g,
-                        'b' => $b,
-                    ],
-                    'count' => array()
-                ];
+            list($r, $g, $b) = sscanf($group->color, "#%02x%02x%02x");
+            $arrayOfGroups[$group->id] = [
+                'name'  => $group->name,
+                'color' => [
+                    'r' => $r,
+                    'g' => $g,
+                    'b' => $b,
+                ],
+                'count' => array()
+            ];
             foreach ($conditions as $condition) {
                 $arrayOfGroups[$group->id]['count'][] = Specialist::whereHas('groups', function ($query) use ($group) {
-                        $query->where('id', $group->id);
+                    $query->where('id', $group->id);
+                })
+                    ->whereHas('histories', function ($query) use ($condition) {
+                        $query->where('condition_id', $condition->id);
                     })
-                        ->whereHas('histories', function ($query) use ($condition) {
-                            $query->where('condition_id', $condition->id);
-                        })
-                        ->whereIn('reasdis_id', post('reasdises'))
-                        ->where('is_ended', true)
-                        ->where('ended_at', '>=', $started)
-                        ->where('ended_at', '<=', $ended)
-                        ->count();
+                    ->whereIn('reasdis_id', post('reasdises'))
+                    ->where('is_ended', true)
+                    ->where('ended_at', '>=', $started)
+                    ->where('ended_at', '<=', $ended)
+                    ->count();
             }
         }
 
@@ -142,7 +142,7 @@ class Analitycs extends Controller
                         ->where('ended_at', '>=', $started)
                         ->where('ended_at', '<=', $ended)
                         ->count();
-                    $averagePay = ($charsCount > 0)? round($salary / $charsCount): 0;
+                    $averagePay = ($charsCount > 0) ? round($salary / $charsCount) : 0;
 
 
                     $counts[] = $averagePay;
@@ -152,13 +152,13 @@ class Analitycs extends Controller
 
                 if (post('stazh')) {
                     $allStazh = Specialist::whereHas('groups', function ($query) use ($group) {
-                        $query->where('id', $group->id);
-                    })
-                        ->whereIn('reasdis_id', post('reasdises'))
-                        ->where('is_ended', true)
-                        ->where('ended_at', '>=', $started)
-                        ->where('ended_at', '<=', $ended)
-                        ->get()->sum('work_days') / 365;
+                            $query->where('id', $group->id);
+                        })
+                            ->whereIn('reasdis_id', post('reasdises'))
+                            ->where('is_ended', true)
+                            ->where('ended_at', '>=', $started)
+                            ->where('ended_at', '<=', $ended)
+                            ->get()->sum('work_days') / 365;
 
                     $charsCount = Specialist::whereHas('groups', function ($query) use ($group) {
                         $query->where('id', $group->id);
@@ -169,7 +169,7 @@ class Analitycs extends Controller
                         ->where('ended_at', '<=', $ended)
                         ->count();
 
-                    $averageStazh = ($charsCount > 0)? round($allStazh / $charsCount): 0;
+                    $averageStazh = ($charsCount > 0) ? round($allStazh / $charsCount) : 0;
 
                     $counts[] = $averageStazh;
                 }
@@ -192,12 +192,12 @@ class Analitycs extends Controller
                         ->where('ended_at', '<=', $ended)
                         ->count();
 
-                    $averageVozrast = ($charsCount > 0)? round($allVozrast / $charsCount): 0;
+                    $averageVozrast = ($charsCount > 0) ? round($allVozrast / $charsCount) : 0;
 
                     $counts[] = $averageVozrast;
                 }
                 $averages[] = [
-                    'name' => $group->name,
+                    'name'  => $group->name,
                     'color' => [
                         'r' => $r,
                         'g' => $g,
@@ -212,10 +212,10 @@ class Analitycs extends Controller
 
         return [
             '#answer' => \Twig::parse($this->makePartial('make_correlation'), [
-                'conditions' => $conditionsFinalList,
-                'groups'    => $arrayOfGroups,
-                'averages' => $averages,
-                'averageTitles' => $averageTitles,
+                'conditions'     => $conditionsFinalList,
+                'groups'         => $arrayOfGroups,
+                'averages'       => $averages,
+                'averageTitles'  => $averageTitles,
                 'isShowAverages' => $isShowAverages,
             ]),
         ];
@@ -224,7 +224,7 @@ class Analitycs extends Controller
     public function onMakeFluidity()
     {
         trace_log(post());
-        $year = Carbon::parse(post('year').'-01-01')->startOfYear();
+        $year = Carbon::parse(post('year') . '-01-01')->startOfYear();
         $groups = Group::whereIn('id', post('groups'))->get();
         $months = ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'];
         $dataset = array();
@@ -233,7 +233,7 @@ class Analitycs extends Controller
         foreach ($groups as $group) {
             list($r, $g, $b) = sscanf($group->color, "#%02x%02x%02x");
             $counts = array();
-            for($i = 0; $i <= 11; $i++) {
+            for ($i = 0; $i <= 11; $i++) {
                 $from = $year->copy()->addMonths($i)->startOfMonth()->toDateTimeString();
                 $to = $year->copy()->addMonths($i)->endOfMonth()->toDateTimeString();
 
@@ -263,7 +263,7 @@ class Analitycs extends Controller
                 $counts[] = $ktk;
             }
             $dataset[] = [
-                'name' => $group->name,
+                'name'  => $group->name,
                 'color' => [
                     'r' => $r,
                     'g' => $g,
@@ -282,7 +282,7 @@ class Analitycs extends Controller
             list($r, $g, $b) = sscanf($group->color, "#%02x%02x%02x");
             $counts1 = array();
             $counts2 = array();
-            for($i = 0; $i <= 11; $i++) {
+            for ($i = 0; $i <= 11; $i++) {
                 $from = $year->copy()->addMonths($i)->startOfMonth()->toDateTimeString();
                 $to = $year->copy()->addMonths($i)->endOfMonth()->toDateTimeString();
 
@@ -318,7 +318,7 @@ class Analitycs extends Controller
                 $totalWithoutConditionYear += $dataWithOut;
             }
             $dataset2[] = [
-                'name' => $group->name.' | включая '.$condition->name,
+                'name'  => $group->name . ' | включая ' . $condition->name,
                 'color' => [
                     'r' => $r,
                     'g' => $g,
@@ -327,7 +327,7 @@ class Analitycs extends Controller
                 'count' => $counts1,
             ];
             $dataset2[] = [
-                'name' => $group->name.' | исключая '.$condition->name,
+                'name'  => $group->name . ' | исключая ' . $condition->name,
                 'color' => [
                     'r' => $r,
                     'g' => $g,
@@ -337,19 +337,99 @@ class Analitycs extends Controller
             ];
         }
 
-        trace_log($dataset);
+        $showSalary = false;
+        $dataset3 = array();
+        $totalWorkersSalary = 0;
+        $totalFuckersSalary = 0;
+        if (post('salary')) {
+            $showSalary = true;
+            foreach ($groups as $group) {
+                list($r, $g, $b) = sscanf($group->color, "#%02x%02x%02x");
+                $counts1 = array();
+                $counts2 = array();
+                for ($i = 0; $i <= 11; $i++) {
+                    $from = $year->copy()->addMonths($i)->startOfMonth()->toDateTimeString();
+                    $to = $year->copy()->addMonths($i)->endOfMonth()->toDateTimeString();
+
+                    $salaryWorkers = Specialist::whereHas('groups', function ($query) use ($group) {
+                        $query->where('id', $group->id);
+                    })
+                        ->where('started_at', '<=', $to)
+                        ->where('ended_at', '>', $to)
+                        ->orWhere('started_at', '<=', $to)
+                        ->whereNull('ended_at')
+                        ->sum('salary');
+
+                    $salaryWorkersCount = Specialist::whereHas('groups', function ($query) use ($group) {
+                        $query->where('id', $group->id);
+                    })
+                        ->where('started_at', '<=', $to)
+                        ->where('ended_at', '>', $to)
+                        ->orWhere('started_at', '<=', $to)
+                        ->whereNull('ended_at')
+                        ->count();
+
+                    $salaryFuckers = Specialist::whereHas('groups', function ($query) use ($group) {
+                        $query->where('id', $group->id);
+                    })
+                        ->where('started_at', '<=', $to)
+                        ->where('ended_at', '<=', $to)
+                        ->where('ended_at', '>=', $from)
+                        ->whereIn('reasdis_id', post('reasdises'))
+                        ->where('is_ended', true)
+                        ->sum('salary');
+
+                    $salaryFuckersCount = Specialist::whereHas('groups', function ($query) use ($group) {
+                        $query->where('id', $group->id);
+                    })
+                        ->where('started_at', '<=', $to)
+                        ->where('ended_at', '<=', $to)
+                        ->where('ended_at', '>=', $from)
+                        ->whereIn('reasdis_id', post('reasdises'))
+                        ->where('is_ended', true)
+                        ->count();
+
+                    $counts1[] = ($salaryWorkersCount > 0) ? round($salaryWorkers / $salaryWorkersCount) : 0;
+                    $totalWorkersSalary += ($salaryWorkersCount > 0) ? round($salaryWorkers / $salaryWorkersCount) : 0;
+                    $counts2[] = ($salaryFuckersCount > 0) ? round($salaryFuckers / $salaryFuckersCount) : 0;
+                    $totalFuckersSalary += ($salaryFuckersCount > 0) ? round($salaryFuckers / $salaryFuckersCount) : 0;
+                }
+                $dataset3[] = [
+                    'name'  => $group->name . ' - работающие ',
+                    'color' => [
+                        'r' => $r,
+                        'g' => $g,
+                        'b' => $b,
+                    ],
+                    'count' => $counts1,
+                ];
+                $dataset3[] = [
+                    'name'  => $group->name . ' - уволенные',
+                    'color' => [
+                        'r' => $r,
+                        'g' => $g,
+                        'b' => $b,
+                    ],
+                    'count' => $counts2,
+                ];
+            }
+        }
+
         return [
             '#answer' => \Twig::parse($this->makePartial('make_fluidity'), [
-                'months' => $months,
-                'dataset' => $dataset,
-                'dataset2' => $dataset2,
-                'condition' => $condition,
-                'totalWithConditionYear' => $totalWithConditionYear,
+                'months'                    => $months,
+                'dataset'                   => $dataset,
+                'dataset2'                  => $dataset2,
+                'condition'                 => $condition,
+                'totalWithConditionYear'    => $totalWithConditionYear,
                 'totalWithoutConditionYear' => $totalWithoutConditionYear,
+                'showSalary'                => $showSalary,
+                'dataset3'                  => $dataset3,
+                'totalWorkersSalary'        => round($totalWorkersSalary / 12 / $groups->count()),
+                'totalFuckersSalary'        => round($totalFuckersSalary / 12 / $groups->count())
             ]),
         ];
     }
-
 
 
 }

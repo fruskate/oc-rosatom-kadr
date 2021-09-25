@@ -5,10 +5,16 @@
             <p class="{% if totalWithConditionYear < totalWithoutConditionYear %}positive{% else %}negative{% endif %}">{{ totalWithConditionYear }}</p>
             <p class="description">без условия: {{ totalWithoutConditionYear  }}</p>
         </div>
+        <div class="scoreboard-item title-value">
+            <h4>Уровень зарплаты работающих за год</h4>
+            <p class="{% if totalWorkersSalary > totalFuckersSalary %}positive{% else %}negative{% endif %}">{{ totalWorkersSalary }}</p>
+            <p class="description">уволенных: {{ totalFuckersSalary  }}</p>
+        </div>
     </div>
 </div>
 <canvas id="fullFluidity" width="500" height="100"></canvas>
 <canvas id="fluidityWithCondition" width="500" height="100"></canvas>
+<canvas id="salary" width="500" height="100"></canvas>
 <script>
     new Chart(document.getElementById("fullFluidity"), {
         type: 'bar',
@@ -71,6 +77,39 @@
                 title: {
                     display: true,
                     text: 'Средние значения по группам с/без выбранного дополнительного условия'
+                }
+            }
+        },
+
+    });
+    new Chart(document.getElementById("salary"), {
+        type: 'bar',
+        data: {
+            labels: [
+
+                {% for item in months %}'{{ item }}'{% if not loop.last %},{% endif %}{% endfor %}
+
+            ],
+            datasets: [
+                {% for item in dataset3 %}
+                {
+                    label: '{{ item.name }}',
+                    data: [{% for count in item.count %}{{ count }}{% if not loop.last %},{% endif %}{% endfor %}],
+                    borderColor: 'rgb({{ item.color.r }}, {{ item.color.g }}, {{ item.color.b }})',
+                    backgroundColor: 'rgba({{ item.color.r }}, {{ item.color.g }}, {{ item.color.b }}, 0.5)',
+                }{% if not loop.last %},{% endif %}
+                {% endfor %}
+            ]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'top',
+                },
+                title: {
+                    display: true,
+                    text: 'Средние значения зарплаты уволившихся и работающих по группам'
                 }
             }
         },
