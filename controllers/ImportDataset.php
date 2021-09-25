@@ -3,6 +3,7 @@
 use BackendMenu;
 use Backend\Classes\Controller;
 use Frukt\Kadr\Imports\UsersImport;
+use Frukt\Kadr\Imports\MentorImport;
 use Excel;
 
 /**
@@ -31,6 +32,15 @@ class ImportDataset extends Controller
 
         return [
             '#answer' => 'Данные успешно загружены. Хорошей работы, о мой повелитель!'
+        ];
+    }
+
+    public function onLoadXLSFileWithMentors()
+    {
+        Excel::import(new MentorImport, \Input::file('file'));
+
+        return [
+            '#answerMentors' => 'Данные по наставникам успешно загружены, о мой повелитель!'
         ];
     }
 
