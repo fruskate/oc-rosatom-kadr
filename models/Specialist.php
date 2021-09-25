@@ -27,7 +27,7 @@ class Specialist extends Model
 
     public $dates = ['borned_at', 'started_at', 'ended_at'];
 
-    protected $appends = ['work_days'];
+    protected $appends = ['work_days', 'vozrast'];
 
     protected $fillable = ['fio', 'borned_at', 'started_at', 'ended_at', 'is_ended', 'reasdis_id', 'salary',
         'childs', 'sex_id', 'position_id', 'family_id'];
@@ -76,5 +76,16 @@ class Specialist extends Model
         $end = $this->ended_at? $this->ended_at : Carbon::now();
 
         return $end->diffInDays($this->started_at);
+    }
+
+    public function getVozrastAttribute()
+    {
+        $end = $this->ended_at? $this->ended_at : false;
+
+        if (!$end) {
+            return false;
+        }
+
+        return $end->diffInYears($this->borned_at);
     }
 }

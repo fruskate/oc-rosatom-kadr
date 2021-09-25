@@ -52,9 +52,6 @@ class Analitycs extends Controller
             throw new \ValidationException(['dates' => 'Пожалуйста, выберите даты!']);
         }
 
-
-        $groups = post('groups');
-
         $conditions = Condition::whereIn('id', post('conditions'))->get();
 
         $conditionsFinalList = array();
@@ -91,39 +88,128 @@ class Analitycs extends Controller
                         ->where('ended_at', '<=', $ended)
                         ->count();
             }
-
-            if (post('salary')) {
-                if (post('salary')) {
-                    $conditionsFinalList['salary'] = ['name' => 'Средняя зарплата'];
-                }
-
-
-                $salary = Specialist::whereHas('groups', function ($query) use ($group) {
-                    $query->where('id', $group->id);
-                })
-                    ->whereIn('reasdis_id', post('reasdises'))
-                    ->where('is_ended', true)
-                    ->where('ended_at', '>=', $started)
-                    ->where('ended_at', '<=', $ended)
-                    ->sum('salary');
-                $charsCount = Specialist::whereHas('groups', function ($query) use ($group) {
-                    $query->where('id', $group->id);
-                })
-                    ->whereIn('reasdis_id', post('reasdises'))
-                    ->where('is_ended', true)
-                    ->where('ended_at', '>=', $started)
-                    ->where('ended_at', '<=', $ended)
-                    ->count();
-                $arrayOfGroups[$group->id]['count'][] = ($charsCount > 0)? round($salary / $charsCount): 0;
-            }
         }
 
-        trace_log($arrayOfGroups);
+        $isShowAverages = false;
+        $averages = array();
+        $averageTitles = array();
+
+        if (post('salary') or post('stazh') or post('vozrast')) {
+            $isShowAverages = true;
+            if (post('salary')) {
+                $averageTitles[] = 'Средняя зарплата';
+            }
+            if (post('stazh')) {
+                $averageTitles[] = 'Стаж в днях';
+            }
+            if (post('vozrast')) {
+                $averageTitles[] = 'Возраст';
+            }
+
+        }
+        if ($isShowAverages) {
+
+            foreach ($groups as $group) {
+                list($r, $g, $b) = sscanf($group->color, "#%02x%02x%02x");
+
+                $counts = array();
+
+                if (post('salary')) {
+                    $salary = Specialist::whereHas('groups', function ($query) use ($group) {
+                        $query->where('id', $group->id);
+                    })
+                        ->whereIn('reasdis_id', post('reasdises'))
+                        ->where('is_ended', true)
+                        ->where('ended_at', '>=', $started)
+                        ->where('ended_at', '<=', $ended)
+                        ->sum('salary');
+
+                    $charsCount = Specialist::whereHas('groups', function ($query) use ($group) {
+                        $query->where('id', $group->id);
+                    })
+                        ->whereIn('reasdis_id', post('reasdises'))
+                        ->where('is_ended', true)
+                        ->where('ended_at', '>=', $started)
+                        ->where('ended_at', '<=', $ended)
+                        ->count();
+                    $averagePay = ($charsCount > 0)? round($salary / $charsCount): 0;
+
+
+                    $counts[] = $averagePay;
+
+
+                }
+
+                if (post('stazh')) {
+                    $allStazh = Specialist::whereHas('groups', function ($query) use ($group) {
+                        $query->where('id', $group->id);
+                    })
+                        ->whereIn('reasdis_id', post('reasdises'))
+                        ->where('is_ended', true)
+                        ->where('ended_at', '>=', $started)
+                        ->where('ended_at', '<=', $ended)
+                        ->get()->sum('work_days');
+
+                    $charsCount = Specialist::whereHas('groups', function ($query) use ($group) {
+                        $query->where('id', $group->id);
+                    })
+                        ->whereIn('reasdis_id', post('reasdises'))
+                        ->where('is_ended', true)
+                        ->where('ended_at', '>=', $started)
+                        ->where('ended_at', '<=', $ended)
+                        ->count();
+
+                    $averageStazh = ($charsCount > 0)? round($allStazh / $charsCount): 0;
+
+                    $counts[] = $averageStazh;
+                }
+                if (post('vozrast')) {
+                    $allVozrast = Specialist::whereHas('groups', function ($query) use ($group) {
+                        $query->where('id', $group->id);
+                    })
+                        ->whereIn('reasdis_id', post('reasdises'))
+                        ->where('is_ended', true)
+                        ->where('ended_at', '>=', $started)
+                        ->where('ended_at', '<=', $ended)
+                        ->get()->sum('vozrast');
+
+                    $charsCount = Specialist::whereHas('groups', function ($query) use ($group) {
+                        $query->where('id', $group->id);
+                    })
+                        ->whereIn('reasdis_id', post('reasdises'))
+                        ->where('is_ended', true)
+                        ->where('ended_at', '>=', $started)
+                        ->where('ended_at', '<=', $ended)
+                        ->count();
+
+                    $averageVozrast = ($charsCount > 0)? round($allVozrast / $charsCount): 0;
+
+                    $counts[] = $averageVozrast;
+                }
+                $averages[] = [
+                    'name' => $group->name,
+                    'color' => [
+                        'r' => $r,
+                        'g' => $g,
+                        'b' => $b,
+                    ],
+                    'count' => $counts,
+                ];
+
+            }
+
+        }
+
+
+        trace_log($averages);
 
         return [
             '#answer' => \Twig::parse($this->makePartial('make_correlation'), [
                 'conditions' => $conditionsFinalList,
-                'groups'    => $arrayOfGroups
+                'groups'    => $arrayOfGroups,
+                'averages' => $averages,
+                'averageTitles' => $averageTitles,
+                'isShowAverages' => $isShowAverages,
             ]),
         ];
     }

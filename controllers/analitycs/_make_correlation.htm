@@ -1,3 +1,6 @@
+{% if isShowAverages %}
+    <canvas id="averages" width="500" height="100"></canvas>
+{% endif %}
 <canvas id="fullCorrelation" width="500" height="500"></canvas>
 <script>
     new Chart(document.getElementById("fullCorrelation"), {
@@ -37,4 +40,39 @@
             }
         },
     });
+    {% if isShowAverages %}
+        new Chart(document.getElementById("averages"), {
+            type: 'bar',
+            data: {
+                labels: [
+                    {% for item in averageTitles %}
+                        '{{ item }}'{% if not loop.last %},{% endif %}
+                    {% endfor %}
+                ],
+                datasets: [
+                    {% for item in averages %}
+                        {
+                            label: '{{ item.name }}',
+                            data: [{% for item in item.count %}'{{ item }}'{% if not loop.last %},{% endif %}{% endfor %}],
+                            borderColor: 'rgb({{ item.color.r }}, {{ item.color.g }}, {{ item.color.b }})',
+                            backgroundColor: 'rgba({{ item.color.r }}, {{ item.color.g }}, {{ item.color.b }}, 0.5)',
+                        }{% if not loop.last %},{% endif %}
+                    {% endfor %}
+                ]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    title: {
+                        display: true,
+                        text: 'Средние значения по группам'
+                    }
+                }
+            },
+
+        });
+    {% endif %}
 </script>
