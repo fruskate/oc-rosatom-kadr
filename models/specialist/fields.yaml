@@ -34,6 +34,10 @@ fields:
         span: auto
         type: relation
         emptyOption: '-- НЕ УКАЗАНО --'
+    childs:
+        label: 'ДЕТИШЕК'
+        type: number
+        span: auto
     salary:
         label: ЗАРПЛАТА
         span: auto

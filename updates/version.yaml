@@ -69,3 +69,6 @@
 1.0.24:
     - 'Created table frukt_kadr_families'
     - builder_table_create_frukt_kadr_families.php
+1.0.25:
+    - 'Updated table frukt_kadr_specialists'
+    - builder_table_update_frukt_kadr_specialists_6.php

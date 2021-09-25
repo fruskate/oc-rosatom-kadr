@@ -1,8 +1,11 @@
 <?php namespace Frukt\Kadr\Imports;
 
 use Carbon\Carbon;
+use Frukt\Kadr\Models\Family;
 use Frukt\Kadr\Models\Group;
 use Frukt\Kadr\Models\History;
+use Frukt\Kadr\Models\Position;
+use Frukt\Kadr\Models\Sex;
 use Frukt\Kadr\Models\Specialist;
 use Maatwebsite\Excel\Concerns\ToModel;
 
@@ -39,6 +42,18 @@ class UsersImport implements ToModel
             }
             return $specialist;
         } else {
+            $position = Position::where('name', $row[1])->firstOrCreate([
+                'name' => $row[1]
+            ]);
+
+            $sex = Sex::where('name', $row[3])->firstOrCreate([
+                'name' => $row[3]
+            ]);
+
+            $family = Family::where('name', $row[4])->firstOrCreate([
+                'name' => $row[4]
+            ]);
+
             $specialist = new Specialist([
                 'fio'        => $row[0],
                 'borned_at'  => Carbon::parse($this->toNormalDate($row[2])),
@@ -47,31 +62,15 @@ class UsersImport implements ToModel
                 'is_ended'   => $isEnded,
                 'reasdis_id' => $isEnded ? $this->randomReasdis() : null,
                 'salary'     => $row[9],
+                'childs'     => $row[11],
+                'position_id' => $position->id,
+                'sex_id' => $sex->id,
+                'family_id' => $family->id,
             ]);
             $specialist->save();
         }
 
-        $groupPosition = Group::where('parent_id', 11)->where('name', $row[1])->firstOrCreate([
-            'name'      => $row[1],
-            'parent_id' => 11
-        ]);
 
-        $groupSex = Group::where('parent_id', 8)->where('name', $row[3])->firstOrCreate([
-            'name'      => $row[3],
-            'parent_id' => 8
-        ]);
-
-        $groupFamily = Group::where('parent_id', 39)->where('name', $row[4])->firstOrCreate([
-            'name'      => $row[4],
-            'parent_id' => 39
-        ]);
-        $specialist->groups()->syncWithoutDetaching([$groupPosition->id, $groupSex->id, $groupFamily->id]);
-        $history = new History();
-        $history->specialist_id = $specialist->id;
-        $history->condition_id = 7; // Детки
-        $history->amount = $row[11];
-        $history->created_at = Carbon::parse($this->toNormalDate($row[5]));
-        $history->save();
 
         return $specialist;
     }
