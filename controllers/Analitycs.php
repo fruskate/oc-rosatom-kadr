@@ -200,9 +200,6 @@ class Analitycs extends Controller
 
         }
 
-
-        trace_log($averages);
-
         return [
             '#answer' => \Twig::parse($this->makePartial('make_correlation'), [
                 'conditions' => $conditionsFinalList,
@@ -212,6 +209,11 @@ class Analitycs extends Controller
                 'isShowAverages' => $isShowAverages,
             ]),
         ];
+    }
+
+    public function fluidity()
+    {
+
     }
 
 }
