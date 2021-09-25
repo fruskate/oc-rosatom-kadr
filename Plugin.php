@@ -8,6 +8,8 @@ use Rubix\ML\Datasets\Unlabeled;
 
 use Rubix\ML\CrossValidation\Metrics\MeanAbsoluteError;
 
+use Illuminate\Database\Eloquent\Factory as EloquentFactory;
+
 class Plugin extends PluginBase
 {
     public function registerComponents()
@@ -34,6 +36,9 @@ class Plugin extends PluginBase
     {
         $this->registerConsoleCommand('dataset:entergroups', 'Frukt\Kadr\Console\EnterToGroups');
         $this->registerConsoleCommand('dataset:addconditions', 'Frukt\Kadr\Console\AddConditions');
+        $this->registerConsoleCommand('make:demoset', 'Frukt\Kadr\Console\MakeDemo');
+
+        app(EloquentFactory::class)->load(plugins_path('frukt/kadr/factories'));
     }
 
     public function boot()
