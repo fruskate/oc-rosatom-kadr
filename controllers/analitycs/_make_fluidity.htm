@@ -1,0 +1,36 @@
+<canvas id="fullFluidity" width="500" height="100"></canvas>
+<script>
+    new Chart(document.getElementById("fullFluidity"), {
+        type: 'bar',
+        data: {
+            labels: [
+
+                {% for item in months %}'{{ item }}'{% if not loop.last %},{% endif %}{% endfor %}
+
+            ],
+            datasets: [
+                {% for item in dataset %}
+                {
+                    label: '{{ item.name }}',
+                    data: [{% for count in item.count %}{{ count }}{% if not loop.last %},{% endif %}{% endfor %}],
+                    borderColor: 'rgb({{ item.color.r }}, {{ item.color.g }}, {{ item.color.b }})',
+                    backgroundColor: 'rgba({{ item.color.r }}, {{ item.color.g }}, {{ item.color.b }}, 0.5)',
+                }{% if not loop.last %},{% endif %}
+                {% endfor %}
+            ]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'top',
+                },
+                title: {
+                    display: true,
+                    text: 'Средние значения по группам'
+                }
+            }
+        },
+
+    });
+</script>

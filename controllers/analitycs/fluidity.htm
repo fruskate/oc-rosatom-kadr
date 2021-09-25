@@ -1,7 +1,80 @@
 <?php Block::put('breadcrumb') ?>
 <ul>
     <li><a href="<?= Backend::url('frukt/kadr/analitycs') ?>">Аналитика</a></li>
-    <li>Текучесть</li>
+    <li>Текучесть за год</li>
 </ul>
 <?php Block::endPut() ?>
-<h3>Выясняем текучесть</h3>
+<h3>Выясняем текучесть за год</h3>
+<form id="formFluidity" data-request="onMakeFluidity" data-request-validate autocomplete="off">
+    <div class="scoreboard">
+        <div data-control="toolbar">
+            <div class="scoreboard-item">
+                <p class="help-block before-field">Выберите год для расчёта</p>
+                <select class="form-control custom-select" name="year">
+                    <option selected="selected" value="2020">2020</option>
+                    <option value="2021">2021</option>
+                </select>
+            </div>
+            <div class="scoreboard-item">
+                <div class="field-checkboxlist-container">
+                    <p class="help-block before-field">Причины увольнений для расчёта?</p>
+                    <?php $i = 1; foreach ($reasdises as $item) { ?>
+                    <div class="checkbox custom-checkbox" tabindex="0">
+                        <input id="checkbox-readis<?= $i ?>" name="reasdises[]" value="<?= $item->id ?>" type="checkbox" <?php if ($i == 1) { echo('checked="checked" aria-checked="true"'); } ?> />
+                        <label for="checkbox-readis<?= $i ?>" class="storm-icon-pseudo"> <?= $item->name ?> </label>
+                        <p class="help-block"><?= $item->comment ?></p>
+                    </div>
+                    <?php $i++;  } ?>
+                </div>
+            </div>
+            <div class="scoreboard-item">
+                <div class="field-checkboxlist-container">
+                    <p class="help-block before-field">Какие группы включить в расчёты?</p>
+                    <?php $i = 1; foreach ($groups as $item) { ?>
+                    <div class="checkbox custom-checkbox" tabindex="0">
+                        <input id="checkbox-group<?= $i ?>" name="groups[]" value="<?= $item->id ?>" type="checkbox" <?php if ($i == 1) { echo('checked="checked" aria-checked="true"'); } ?> />
+                        <label for="checkbox-group<?= $i ?>" class="storm-icon-pseudo"> <?= $item->name ?> </label>
+                        <p class="help-block"><?= $item->comment ?></p>
+                    </div>
+                    <?php $i++;  } ?>
+                </div>
+            </div>
+            <div class="scoreboard-item">
+                <div class="field-checkboxlist-container">
+                    <p class="help-block before-field">Какие условия должны участвовать в расчётах?</p>
+                    <?php $i = 1; foreach ($conditions as $item) { ?>
+                    <div class="checkbox custom-checkbox" tabindex="0">
+                        <input id="checkbox-condition<?= $i ?>" name="conditions[]" value="<?= $item->id ?>" type="checkbox" checked="checked" aria-checked="true" />
+                        <label for="checkbox-condition<?= $i ?>" class="storm-icon-pseudo"> <?= $item->name ?> </label>
+                        <p class="help-block"><?= $item->comment ?></p>
+                    </div>
+                    <?php $i++;  } ?>
+                </div>
+            </div>
+            <div class="scoreboard-item">
+                <div class="field-checkboxlist-container">
+                    <p class="help-block before-field">Дополнительные данные</p>
+                    <div class="checkbox custom-checkbox" tabindex="0">
+                        <input id="checkbox-salary" name="salary" value="1" type="checkbox" checked="checked" aria-checked="true" />
+                        <label for="checkbox-salary" class="storm-icon-pseudo"> Средняя зарплата </label>
+                        <p class="help-block">Учитывать среднюю зарплату уволившихся</p>
+                    </div>
+                    <div class="checkbox custom-checkbox" tabindex="0">
+                        <input id="checkbox-stazh" name="stazh" value="1" type="checkbox" checked="checked" aria-checked="true" />
+                        <label for="checkbox-stazh" class="storm-icon-pseudo"> Стаж </label>
+                        <p class="help-block">Выводить средний стаж уволившихся</p>
+                    </div>
+                    <div class="checkbox custom-checkbox" tabindex="0">
+                        <input id="checkbox-vozrast" name="vozrast" value="1" type="checkbox" checked="checked" aria-checked="true" />
+                        <label for="checkbox-vozrast" class="storm-icon-pseudo"> Возраст </label>
+                        <p class="help-block">Выводить средний возраст уволившихся</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="text-center">
+        <button id="generationButton" type="submit" class="btn btn-primary">Обработать данные</button>
+    </div>
+</form>
+<div class="m-t-lg" id="answer"></div>

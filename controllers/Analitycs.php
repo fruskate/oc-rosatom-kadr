@@ -7,6 +7,7 @@ use Frukt\Kadr\Models\Condition;
 use Frukt\Kadr\Models\Group;
 use Frukt\Kadr\Models\Reasdis;
 use Frukt\Kadr\Models\Specialist;
+use function Matrix\trace;
 
 /**
  * Analitycs Backend Controller
@@ -36,6 +37,15 @@ class Analitycs extends Controller
         $this->addJs('/plugins/frukt/kadr/assets/js/chart.min.js', '1.0.0');
         $this->addCss('/plugins/frukt/kadr/assets/css/datepicker.min.css');
 
+        $this->vars['reasdises'] = Reasdis::all();
+        $this->vars['groups'] = Group::all();
+        $this->vars['conditions'] = Condition::all();
+    }
+
+    public function fluidity()
+    {
+        $this->addJs('/plugins/frukt/kadr/assets/js/datepicker.min.js');
+        $this->addJs('/plugins/frukt/kadr/assets/js/chart.min.js', '1.0.0');
         $this->vars['reasdises'] = Reasdis::all();
         $this->vars['groups'] = Group::all();
         $this->vars['conditions'] = Condition::all();
@@ -211,9 +221,67 @@ class Analitycs extends Controller
         ];
     }
 
-    public function fluidity()
+    public function onMakeFluidity()
     {
+        trace_log(post());
+        $year = Carbon::parse(post('year').'-01-01')->startOfYear();
+        $groups = Group::whereIn('id', post('groups'))->get();
+        $dataset = array();
 
+        foreach ($groups as $group) {
+            list($r, $g, $b) = sscanf($group->color, "#%02x%02x%02x");
+            $counts = array();
+            for($i = 0; $i <= 11; $i++) {
+                $from = $year->copy()->addMonths($i)->startOfMonth()->toDateTimeString();
+                $to = $year->copy()->addMonths($i)->endOfMonth()->toDateTimeString();
+
+                $all = Specialist::whereHas('groups', function ($query) use ($group) {
+                    $query->where('id', $group->id);
+                })
+                    ->where('started_at', '<=', $to)
+                    ->where('ended_at', '>', $to)
+                    ->orWhere('started_at', '<=', $to)
+                    ->whereNull('ended_at')
+                    ->count();
+
+                $ended = Specialist::whereHas('groups', function ($query) use ($group) {
+                    $query->where('id', $group->id);
+                })
+                    ->where('started_at', '<=', $to)
+                    ->where('ended_at', '<=', $to)
+                    ->where('ended_at', '>=', $from)
+                    ->whereIn('reasdis_id', post('reasdises'))
+                    ->where('is_ended', true)
+                    ->count();
+
+                $ktk = $ended * 100 / $all;
+
+                trace_log($from, $to, $all, $ended);
+
+                $counts[] = $ktk;
+            }
+            $dataset[] = [
+                'name' => $group->name,
+                'color' => [
+                    'r' => $r,
+                    'g' => $g,
+                    'b' => $b,
+                ],
+                'count' => $counts,
+            ];
+        }
+
+        $months = ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'];
+
+        trace_log($dataset);
+        return [
+            '#answer' => \Twig::parse($this->makePartial('make_fluidity'), [
+                'months' => $months,
+                'dataset' => $dataset
+            ]),
+        ];
     }
+
+
 
 }
