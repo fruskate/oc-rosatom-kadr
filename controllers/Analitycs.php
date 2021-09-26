@@ -101,29 +101,32 @@ class Analitycs extends Controller
         }
 
         // Добавляем кореляцию тех кто ещё работает
-        foreach ($groups as $group) {
-            list($r, $g, $b) = sscanf($group->second_color, "#%02x%02x%02x");
-            $arrayOfGroups[$group->id + 100] = [
-                'name'  => $group->name .' - Работающие',
-                'color' => [
-                    'r' => $r,
-                    'g' => $g,
-                    'b' => $b,
-                ],
-                'count' => array()
-            ];
-            foreach ($conditions as $condition) {
-                $arrayOfGroups[$group->id + 100]['count'][] = Specialist::whereHas('groups', function ($query) use ($group) {
-                    $query->where('id', $group->id);
-                })
-                    ->whereHas('histories', function ($query) use ($condition) {
-                        $query->where('condition_id', $condition->id);
+        if (post('more')) {
+            foreach ($groups as $group) {
+                list($r, $g, $b) = sscanf($group->second_color, "#%02x%02x%02x");
+                $arrayOfGroups[$group->id + 100] = [
+                    'name'  => $group->name .' - Работающие',
+                    'color' => [
+                        'r' => $r,
+                        'g' => $g,
+                        'b' => $b,
+                    ],
+                    'count' => array()
+                ];
+                foreach ($conditions as $condition) {
+                    $arrayOfGroups[$group->id + 100]['count'][] = Specialist::whereHas('groups', function ($query) use ($group) {
+                        $query->where('id', $group->id);
                     })
-                    ->where('is_ended', false)
-                    ->where('started_at', '<', $ended)
-                    ->count();
+                        ->whereHas('histories', function ($query) use ($condition) {
+                            $query->where('condition_id', $condition->id);
+                        })
+                        ->where('is_ended', false)
+                        ->where('started_at', '<', $ended)
+                        ->count();
+                }
             }
         }
+
 
         $isShowAverages = false;
         $averages = array();
