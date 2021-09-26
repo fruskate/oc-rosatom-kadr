@@ -75,3 +75,6 @@
 1.0.26:
     - 'Updated table frukt_kadr_specialists'
     - builder_table_update_frukt_kadr_specialists_7.php
+1.0.27:
+    - 'Updated table frukt_kadr_groups'
+    - builder_table_update_frukt_kadr_groups_6.php

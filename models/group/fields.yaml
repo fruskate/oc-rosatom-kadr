@@ -18,3 +18,7 @@ fields:
         label: ЦВЕТ
         span: auto
         type: colorpicker
+    second_color:
+        label: 'ВТОРОЙ ЦВЕТ'
+        span: auto
+        type: colorpicker
