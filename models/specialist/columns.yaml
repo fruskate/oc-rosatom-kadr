@@ -2,31 +2,49 @@ columns:
     fio:
         label: ФИО
         type: text
+        sortable: true
     age:
         label: ВОЗРАСТ
         type: number
+        sortable: true
     started_at:
         label: УСТРОИЛСЯ
         type: timesince
+        sortable: true
     work_days:
         label: 'СТАЖ ДНИ'
         type: number
     grops_count:
         label: 'СОСТОИТ В ГРУППАХ'
         type: number
+        sortable: true
         relation: groups
-        relationCount: true
     salary:
         label: ЗАРПЛАТА
         type: number
+        sortable: true
     histories_count:
         label: УСЛОВИЙ
         type: number
         relation: histories
-        relationCount: true
+        relationCount: 'true'
     is_ended:
         label: УВОЛЕН
         type: switch
+        sortable: true
     ended_at:
         label: УВОЛИЛСЯ
         type: timesince
+        sortable: true
+    pcnt_week:
+        label: НЕДЕЛЯ
+        type: number
+        sortable: true
+    pcnt_two_weeks:
+        label: '2 НЕДЕЛИ'
+        type: number
+        sortable: true
+    pcnt_month:
+        label: МЕСЯЦ
+        type: number
+        sortable: true

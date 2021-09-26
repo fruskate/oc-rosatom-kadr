@@ -37,6 +37,7 @@ class Plugin extends PluginBase
         $this->registerConsoleCommand('dataset:entergroups', 'Frukt\Kadr\Console\EnterToGroups');
         $this->registerConsoleCommand('dataset:addconditions', 'Frukt\Kadr\Console\AddConditions');
         $this->registerConsoleCommand('make:demoset', 'Frukt\Kadr\Console\MakeDemo');
+        $this->registerConsoleCommand('ml:go', 'Frukt\Kadr\Console\Go');
 
         app(EloquentFactory::class)->load(plugins_path('frukt/kadr/factories'));
     }
